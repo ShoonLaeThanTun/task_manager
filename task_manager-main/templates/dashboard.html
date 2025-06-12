@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Task Manager{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Welcome Section -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h1 class="display-6 mb-0">Welcome back, {{ current_user.username }}! 👋</h1>
+            <p class="text-muted mt-2">Here's your task overview for today</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a href="{{ url_for('new_task') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Task
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-number">{{ tasks|selectattr('status', 'equalto', 'To Do')|list|length }}</div>
+                <div class="stats-label">Tasks To Do</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-number">{{ tasks|selectattr('status', 'equalto', 'In Progress')|list|length }}</div>
+                <div class="stats-label">In Progress</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-number">{{ tasks|selectattr('status', 'equalto', 'Done')|list|length }}</div>
+                <div class="stats-label">Completed Tasks</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Categories -->
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <div class="category-pill category-personal">Personal</div>
+        <div class="category-pill category-work">Work</div>
+        <div class="category-pill category-urgent">Urgent</div>
+    </div>
+
+    <!-- Task Columns -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="status-column">
+                <div class="column-header">
+                    <i class="fas fa-list text-primary"></i> To Do
+                </div>
+                {% for task in tasks if task.status == 'To Do' %}
+                <div class="task-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ task.title }}</h5>
+                        <span class="category-pill category-{{ task.category.lower() }}">{{ task.category }}</span>
+                    </div>
+                    <p class="card-text text-muted">{{ task.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Due: {{ task.due_date.strftime('%Y-%m-%d') }}</small>
+                        <div class="task-actions">
+                            <a href="{{ url_for('start_task', task_id=task.id) }}" class="task-action-btn btn-start" title="Start Task">
+                                <i class="fas fa-play"></i>
+                            </a>
+                            <a href="{{ url_for('edit_task', task_id=task.id) }}" class="task-action-btn btn-edit" title="Edit Task">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{{ url_for('delete_task', task_id=task.id) }}" class="task-action-btn btn-delete" title="Delete Task" onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="status-column">
+                <div class="column-header">
+                    <i class="fas fa-spinner text-warning"></i> In Progress
+                </div>
+                {% for task in tasks if task.status == 'In Progress' %}
+                <div class="task-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ task.title }}</h5>
+                        <span class="category-pill category-{{ task.category.lower() }}">{{ task.category }}</span>
+                    </div>
+                    <p class="card-text text-muted">{{ task.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Due: {{ task.due_date.strftime('%Y-%m-%d') }}</small>
+                        <div class="task-actions">
+                            <a href="{{ url_for('complete_task', task_id=task.id) }}" class="task-action-btn btn-finish" title="Complete Task">
+                                <i class="fas fa-check"></i>
+                            </a>
+                            <a href="{{ url_for('edit_task', task_id=task.id) }}" class="task-action-btn btn-edit" title="Edit Task">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{{ url_for('delete_task', task_id=task.id) }}" class="task-action-btn btn-delete" title="Delete Task" onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="status-column">
+                <div class="column-header">
+                    <i class="fas fa-check text-success"></i> Done
+                </div>
+                {% for task in tasks if task.status == 'Done' %}
+                <div class="task-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ task.title }}</h5>
+                        <span class="category-pill category-{{ task.category.lower() }}">{{ task.category }}</span>
+                    </div>
+                    <p class="card-text text-muted">{{ task.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Due: {{ task.due_date.strftime('%Y-%m-%d') }}</small>
+                        <div class="task-actions">
+                            <a href="{{ url_for('edit_task', task_id=task.id) }}" class="task-action-btn btn-edit" title="Edit Task">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{{ url_for('delete_task', task_id=task.id) }}" class="task-action-btn btn-delete" title="Delete Task" onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

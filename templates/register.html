@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Task Manager{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1 class="auth-title">Create Account</h1>
+                        <p class="auth-subtitle">Join us to start managing your tasks</p>
+                    </div>
+                    <form class="auth-form" method="POST">
+                        <div class="auth-input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" class="auth-input" id="username" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="auth-input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" class="auth-input" id="email" name="email" placeholder="Email address" required>
+                        </div>
+                        <div class="auth-input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" class="auth-input" id="password" name="password" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="auth-btn">Create Account</button>
+                    </form>
+                    <div class="auth-footer">
+                        <p class="mb-0">Already have an account? <a href="{{ url_for('login') }}" class="auth-link">Sign In</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
